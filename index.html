@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ruby-ipfs-api by hjoest</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>ruby-ipfs-api</h1>
+        <p>Interplanetary File System (IPFS) for Ruby</p>
+
+        <p class="view"><a href="https://github.com/hjoest/ruby-ipfs-api">View the Project on GitHub <small>hjoest/ruby-ipfs-api</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/hjoest/ruby-ipfs-api/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/hjoest/ruby-ipfs-api/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/hjoest/ruby-ipfs-api">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h1>
+
+<p>IPFS4R is a client library to access the <a href="https://ipfs.io">Interplanetary Filesystem (IPFS)</a> from Ruby.</p>
+
+<p>You can find more examples in the
+<a href="https://github.com/hjoest/ruby-ipfs-api/tree/master/examples">examples directory</a>.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Use <code>gem</code> to install it</p>
+
+<div class="highlight highlight-source-shell"><pre>gem install ipfs-api</pre></div>
+
+<p>or simply add this line to your <code>Gemfile</code></p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">gem</span> <span class="pl-s"><span class="pl-pds">'</span>ipfs-api<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>~&gt; 0.1.0<span class="pl-pds">'</span></span></pre></div>
+
+<h2>
+<a id="basic-examples" class="anchor" href="#basic-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic examples</h2>
+
+<p>This example will add a directory to <em>IPFS</em>. The directory <code>data</code>
+must exist or otherwise an <code>Errno::ENOENT</code> error will be raised.</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>ipfs-api<span class="pl-pds">'</span></span>
+
+ipfs <span class="pl-k">=</span> <span class="pl-c1">IPFS</span>::<span class="pl-c1">Connection</span>.<span class="pl-k">new</span>
+ipfs.add <span class="pl-c1">Dir</span>.<span class="pl-k">new</span>(<span class="pl-s"><span class="pl-pds">'</span>data<span class="pl-pds">'</span></span>)</pre></div>
+
+<h2>
+<a id="advanced" class="anchor" href="#advanced" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced</h2>
+
+<p>Dynamically add folders and files to <em>IPFS</em>, without creating them
+on the local file system:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>ipfs-api<span class="pl-pds">'</span></span>
+
+ipfs <span class="pl-k">=</span> <span class="pl-c1">IPFS</span>::<span class="pl-c1">Connection</span>.<span class="pl-k">new</span>
+folder <span class="pl-k">=</span> <span class="pl-c1">IPFS</span>::<span class="pl-c1">Upload</span>.folder(<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>) <span class="pl-k">do </span>|<span class="pl-smi">test</span>|
+  test.add_file(<span class="pl-s"><span class="pl-pds">'</span>hello.txt<span class="pl-pds">'</span></span>) <span class="pl-k">do </span>|<span class="pl-smi">fd</span>|
+    fd.write <span class="pl-s"><span class="pl-pds">'</span>Hello<span class="pl-pds">'</span></span>
+  <span class="pl-k">end</span>
+  test.add_file(<span class="pl-s"><span class="pl-pds">'</span>world.txt<span class="pl-pds">'</span></span>) <span class="pl-k">do </span>|<span class="pl-smi">fd</span>|
+    fd.write <span class="pl-s"><span class="pl-pds">'</span>World<span class="pl-pds">'</span></span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span>
+ipfs.add folder <span class="pl-k">do </span>|<span class="pl-smi">node</span>|
+  <span class="pl-c"># display each uploaded node:</span>
+  print <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">#{</span><span class="pl-s1">node.name</span><span class="pl-pse"><span class="pl-s1">}</span></span>: <span class="pl-pse">#{</span><span class="pl-s1">node.hash</span><span class="pl-pse"><span class="pl-s1">}</span></span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span> <span class="pl-k">if</span> node.finished?
+<span class="pl-k">end</span></pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>This library is distributed under the <a href="https://github.com/hjoest/ruby-ipfs-api/tree/master/LICENSE">MIT License</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/hjoest">hjoest</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

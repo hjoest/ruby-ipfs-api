@@ -1,7 +1,7 @@
 $:.unshift File.expand_path('../..', __FILE__)
 
 require 'test/samples'
-require 'ipfs4r/io'
+require 'ipfs-api/io'
 
 include IPFS::IO
 

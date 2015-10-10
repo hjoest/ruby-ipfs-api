@@ -1,7 +1,7 @@
 $:.unshift File.expand_path('../..', __FILE__)
 
 require 'test/samples'
-require 'ipfs4r/upload'
+require 'ipfs-api/upload'
 
 class NodeTest < Minitest::Test
 

@@ -107,7 +107,7 @@ Content-Type: application/octet-stream\r\n\
       uri = URI.parse("#{@base_url}/api/v0/#{command}")
       http = Net::HTTP.new(uri.host, uri.port)
 #http.set_debug_output $stderr
-      headers['User-Agent'] = "/ipfs4r/#{VERSION}/"
+      headers['User-Agent'] = "ruby-ipfs-api/#{VERSION}/"
       headers['Transfer-Encoding'] = 'chunked'
       request = Net::HTTP::Post.new(uri.request_uri, headers)
       if stream

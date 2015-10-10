@@ -1,7 +1,7 @@
 $:.unshift File.expand_path('../..', __FILE__)
 
 require 'test/common'
-require 'ipfs4r'
+require 'ipfs-api'
 
 include IPFS
 

@@ -1,6 +1,6 @@
 require 'tmpdir'
 require 'test/common'
-require 'ipfs4r/upload'
+require 'ipfs-api/upload'
 
 module Samples
 
@@ -61,7 +61,7 @@ module Samples
   module_function :some_virtual_folders
 
   def some_filesystem_folders
-    Dir.mktmpdir('ipfs4r-unit-test-') do |root|
+    Dir.mktmpdir('ruby-ipfs-api-unit-test-') do |root|
       a1 = File.join(root, 'a1')
       Dir.mkdir(a1, 0755)
       b1 = File.join(a1, 'b1')

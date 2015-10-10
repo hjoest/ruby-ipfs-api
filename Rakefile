@@ -5,17 +5,17 @@ require 'rdoc/task'
 require 'rubygems/package_task'
 
 $:.unshift 'lib'
-require 'ipfs4r/version'
+require 'ipfs-api/version'
 
-PKG_NAME = 'ipfs4r'
+PKG_NAME = 'ipfs-api'
 PKG_VERSION = IPFS::VERSION
 AUTHORS = ['Holger Joest']
 EMAIL = 'holger@joest.org'
-HOMEPAGE = 'http://ipfs4r.github.io'
+HOMEPAGE = 'http://ruby-ipfs-api.github.io'
 SUMMARY = 'Interplanetary File System for Ruby'
 DESCRIPTION = 'This is a client library to access the IPFS from Ruby'
-RDOC_OPTIONS = [ '--title', SUMMARY, '--quiet', '--main', 'lib/ipfs4r.rb' ]
-BUILD_FILES = [ 'Rakefile', 'ipfs4r.gemspec' ].sort
+RDOC_OPTIONS = [ '--title', SUMMARY, '--quiet', '--main', 'lib/ipfs-api.rb' ]
+BUILD_FILES = [ 'Rakefile', 'ipfs-api.gemspec' ].sort
 RDOC_FILES = [ 'README.md', 'LICENSE' ].sort
 PKG_FILES = (BUILD_FILES + RDOC_FILES + Dir['{lib,test,examples}/**/*']).reject { |f| File.directory?(f) }.sort
 

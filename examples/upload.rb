@@ -1,4 +1,4 @@
-require 'ipfs4r'
+require 'ipfs-api'
 
 ipfs = IPFS::Connection.new
 folder = IPFS::Upload.folder('test') do |test|

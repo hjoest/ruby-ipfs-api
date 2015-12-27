@@ -1,6 +1,6 @@
 # =IPFS4R - Interplanetary Filesystem Library for Ruby
 # License:: MIT (see the LICENSE file)
-# Website:: https://ruby-ipfs-api.github.io
+# Website:: https://hjoest.github.io/ruby-ipfs-api
 #
 # ==Introduction
 #

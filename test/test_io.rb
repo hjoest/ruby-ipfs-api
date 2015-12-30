@@ -7,14 +7,66 @@ include IPFS::IO
 
 class ReadFromWriterIOTest < Minitest::Test
 
-  def test_read_write_io
-    msg = ('a'..'z').to_a.join
-    reader = ReadFromWriterIO.new do |writer|
-      writer << msg
-      writer.close
+  def setup
+    @parts = Samples.some_byte_sequences
+    enum = @parts.each
+    @reader = ReadFromWriterIO.new do |writer|
+      begin
+        writer << enum.next
+      rescue StopIteration
+        writer.close
+      end
     end
-    result = reader.read
-    assert_equal msg, result
+  end
+
+  def test_read_byte_wise
+    result = ''
+    while (byte = @reader.read(1))
+      result << byte
+      assert_equal result.size, @reader.pos
+      assert_not_eof @reader
+    end
+    assert_eof @reader
+    assert_equal @parts.join, result
+  end
+
+  def test_read_larger_chunks
+    result = ''
+    while (chunk = @reader.read(199))
+      result << chunk
+      assert_equal result.size, @reader.pos
+      if chunk.size < 199
+        assert_eof @reader
+      else
+        assert_not_eof @reader
+      end
+    end
+    assert_eof @reader
+    assert_equal @parts.join, result
+  end
+
+  def test_different_variants_of_read
+    chunk = @reader.read(199)
+    assert_equal 199, chunk.size
+    assert_not_eof @reader
+    chunk = @reader.read(0)
+    assert_equal 0, chunk.size
+    assert_not_eof @reader
+    chunk = @reader.read
+    assert_equal 243, chunk.size
+    assert_eof @reader
+    chunk = @reader.read
+    assert_equal 0, chunk.size
+    assert_eof @reader
+  end
+
+  private
+  def assert_eof stream
+    assert stream.eof?, "Stream should have reached end-of-file"
+  end
+
+  def assert_not_eof stream
+    assert !stream.eof?, "Stream should not yet have reached end-of-file"
   end
 
 end

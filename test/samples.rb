@@ -4,6 +4,8 @@ require 'ipfs-api/upload'
 
 module Samples
 
+  TEMP_DIR_PREFIX = 'ruby-ipfs-api-unit-test-'
+
   include IPFS
 
   def some_virtual_folders
@@ -61,7 +63,7 @@ module Samples
   module_function :some_virtual_folders
 
   def some_filesystem_folders
-    Dir.mktmpdir('ruby-ipfs-api-unit-test-') do |root|
+    Dir.mktmpdir(TEMP_DIR_PREFIX) do |root|
       a1 = File.join(root, 'a1')
       Dir.mkdir(a1, 0755)
       b1 = File.join(a1, 'b1')
@@ -80,5 +82,11 @@ module Samples
     end
   end
   module_function :some_filesystem_folders
+
+  def some_byte_sequences
+    s = ('a'..'z').to_a.join
+    [ s ] * 17
+  end
+  module_function :some_byte_sequences
 
 end

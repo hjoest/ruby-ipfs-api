@@ -32,7 +32,7 @@ RDoc::Task.new do |rd|
   rd.options = RDOC_OPTIONS
 end
 
-CLEAN.include [ "*.gem*", "pkg", "rdoc" ]
+CLEAN.include [ "*.gem*", "pkg", "rdoc", "test/tmp" ]
 
 spec = Gem::Specification.new do |s|
   s.name = PKG_NAME

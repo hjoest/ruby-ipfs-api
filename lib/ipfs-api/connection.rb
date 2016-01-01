@@ -81,13 +81,18 @@ Content-Type: application/octet-stream\r\n\
       result
     end
 
-    # FIXME: provides only raw response yet
-    def get path
-      result = ''
-      post("get?arg=#{CGI.escape(path)}") do |chunk|
-        result << chunk
+    def get path, destination = nil
+      stream = IO::ReadFromWriterIO.new do |buf|
+        post("get?arg=#{CGI.escape(path)}") do |chunk|
+          buf << chunk
+        end
+        buf.close
       end
-      result
+      if destination.nil?
+        return stream
+      else
+        return IO::Tar.extract(stream, destination)
+      end
     end
 
     def id

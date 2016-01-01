@@ -31,6 +31,19 @@ ipfs = IPFS::Connection.new
 ipfs.add Dir.new('data')
 ```
 
+Afterwards, we can retrieve what we put in.
+```ruby
+require 'ipfs-api'
+
+ipfs = IPFS::Connection.new
+
+# retrieve contents of a file
+print ipfs.cat('QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG')
+
+# retrieve the whole directory
+ipfs.get('QmSh4Xjoy16v6XmnREE1yCrPM1dnizZc2h6LfrqXsnbBV7', 'copy-of-data')
+```
+
 ## Advanced
 
 Dynamically add folders and files to *IPFS*, without creating them

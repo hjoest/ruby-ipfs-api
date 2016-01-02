@@ -13,4 +13,10 @@ class CommandNameTest < Minitest::Test
     assert resolved.start_with?('/ipfs/Qm')
   end
 
+  def test_name_resolve_with_id
+    ipfs = Connection.new
+    resolved = ipfs.name.resolve('ipfs.io')
+    assert resolved.start_with?('/ipfs/Qm')
+  end
+
 end

@@ -142,9 +142,13 @@ Content-Type: application/octet-stream\r\n\
         @connection = connection
       end
 
-      def resolve
+      def resolve id = nil
         @connection.instance_exec(self) do
-          JSON.parse(post('name/resolve').body)['Path']
+          if id
+            JSON.parse(post("name/resolve?arg=#{CGI.escape(id)}").body)['Path']
+          else
+            JSON.parse(post('name/resolve').body)['Path']
+          end
         end
       end
 

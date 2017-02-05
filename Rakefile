@@ -52,7 +52,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = RDOC_FILES
   s.rdoc_options = RDOC_OPTIONS
-  s.required_ruby_version = ">= 1.9.3"
+  s.required_ruby_version = ">= 2.0.0"
 end
 
 # also keep the gemspec up to date each time we package a tarball or gem

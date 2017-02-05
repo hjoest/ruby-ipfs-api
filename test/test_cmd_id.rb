@@ -1,6 +1,6 @@
-$:.unshift File.expand_path('../..', __FILE__)
+$:.unshift File.expand_path('..', __FILE__)
 
-require 'test/common'
+require 'samples'
 require 'ipfs-api'
 
 include IPFS

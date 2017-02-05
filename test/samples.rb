@@ -1,5 +1,19 @@
 require 'tmpdir'
-require 'test/common'
+require 'minitest/autorun'
+begin
+  Minitest.const_get('Test')
+rescue
+  module Minitest
+    Test = Unit::TestCase
+  end
+end
+if ENV['DEBUG']
+  require 'byebug'
+else
+  def byebug; end
+end
+
+$:.unshift File.expand_path('../../lib', __FILE__)
 require 'ipfs-api/upload'
 
 module Samples

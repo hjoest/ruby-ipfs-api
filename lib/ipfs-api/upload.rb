@@ -63,8 +63,8 @@ module IPFS::Upload
 
       def inspect
         s = "<#{@name}"
-        s << ":#{@bytes}" if @bytes
-        s << ":#{@hash}" if @hash
+        s << ":#{@bytes}" if defined?(@bytes)
+        s << ":#{@hash}" if defined?(@hash)
         s << '>'
       end
 

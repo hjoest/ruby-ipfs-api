@@ -5,18 +5,17 @@ require 'ipfs-api/io'
 
 include IPFS::IO
 
-class ReadFromWriterIOTest < Minitest::Test
+class StreamProducerTest < Minitest::Test
 
   def setup
     @parts = Samples.some_byte_sequences
     enum = @parts.each
-    @reader = ReadFromWriterIO.new do |writer|
-      begin
-        writer << enum.next
-      rescue StopIteration
-        writer.close
+    producer = StreamProducer.new do |writer|
+      enum.each do |part|
+        writer << part
       end
     end
+    @reader = producer.stream
   end
 
   def test_read_byte_wise
@@ -24,7 +23,6 @@ class ReadFromWriterIOTest < Minitest::Test
     while (byte = @reader.read(1))
       result << byte
       assert_equal result.size, @reader.pos
-      assert_not_eof @reader
     end
     assert_eof @reader
     assert_equal @parts.join, result

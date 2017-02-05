@@ -11,66 +11,70 @@ module IPFS
     end
 
     def add nodes, &block
-      boundaries = [ generate_boundary ]
-      headers = {
-        'Content-Disposition' => 'form-data: name="files"',
-        'Content-Type' => "multipart/form-data; boundary=#{boundaries[0]}"
-      }
-      walker = Upload::TreeWalker.depth_first(nodes)
+      boundary = generate_boundary
+      tree_walker = Upload::TreeWalker.depth_first(nodes)
       node_map = {}
-      stream = IO::ReadFromWriterIO.new do |buf|
-        next if walker.nil?
-        begin
-          node, depth = walker.next
+      producer = IO::StreamProducer.new do |buf|
+        buf << %Q{\
+--#{boundary}\r\n\
+Content-Disposition: file; filename="root"\r\n\
+Content-Type: application/x-directory\r\n\
+\r\n\
+\r\n\
+}
+        tree_walker.each do |node, depth|
           node_map[node.path] = node
-        rescue StopIteration
-          depth = -1
-          walker = nil
-        end
-        while boundaries.size > depth+1 && boundary = boundaries.shift
-          buf << %Q{\
---#{boundary}--\r\n\
+          if node.folder?
+            buf << %Q{\
+--#{boundary}\r\n\
+Content-Disposition: file; filename="root#{node.path.gsub('/', '%2F')}"\r\n\
+Content-Type: application/x-directory\r\n\
 \r\n\
 \r\n\
 }
-        end
-        next if walker.nil?
-        if node.folder?
-          boundaries.unshift generate_boundary
-          buf << %Q{\
---#{boundaries[1]}\r\n\
-Content-Disposition: form-data; name="file"; filename="#{node.path}"\r\n\
-Content-Type: multipart/mixed; boundary=#{boundaries[0]}\r\n\
-\r\n\
-\r\n\
-}
-        elsif node.file?
-          buf << %Q{\
---#{boundaries[0]}\r\n\
-Content-Disposition: file; filename="#{node.path}"\r\n\
+          elsif node.file?
+            buf << %Q{\
+--#{boundary}\r\n\
+Content-Disposition: file; filename="root#{node.path.gsub('/', '%2F')}"\r\n\
 Content-Type: application/octet-stream\r\n\
 \r\n\
 #{node.content}\r\n\
 }
-        else
-          raise "Unknown node type: #{node}"
+          else
+            raise "Unknown node type: #{node}"
+          end
         end
+        buf << %Q{\
+--#{boundary}\r\n\
+}
       end
-      nodes = []
+      headers = {
+        'Content-Type' => "multipart/form-data; boundary=#{boundary}"
+      }
+      stream = producer.stream
+      uploaded_nodes = []
       post("add?encoding=json&r=true&progress=true", stream, headers) do |chunk|
         next if chunk.empty?
-        upload = JSON.parse(chunk)
+        upload = nil
+        begin
+          upload = JSON.parse(chunk)
+        rescue JSON::ParserError
+        end
+        next if upload.nil?
         path, bytes, hash = ['Name', 'Bytes', 'Hash'].map { |p| upload[p] }
+        next if not path.start_with?('root/')
+        path = path[4..-1]
         node = node_map[path]
+        next if not node
         node.bytes = bytes if bytes
         node.hash = hash if hash
         if block_given?
           block.call(node)
         elsif hash
-          nodes << node
+          uploaded_nodes << node
         end
       end
-      block_given? ? nil : nodes
+      block_given? ? nil : uploaded_nodes
     end
 
     def cat path
@@ -82,16 +86,16 @@ Content-Type: application/octet-stream\r\n\
     end
 
     def get path, destination = nil
-      stream = IO::ReadFromWriterIO.new do |buf|
+      producer = IO::StreamProducer.new do |buf|
         post("get?arg=#{CGI.escape(path)}") do |chunk|
           buf << chunk
         end
         buf.close
       end
       if destination.nil?
-        return stream
+        return producer.stream
       else
-        return IO::Tar.extract(stream, destination)
+        return IO::Tar.extract(producer.stream, destination)
       end
     end
 

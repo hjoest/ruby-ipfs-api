@@ -1,4 +1,3 @@
-gem 'minitest' if RUBY_VERSION =~ /^1\.9/
 require 'minitest/autorun'
 if ENV['DEBUG']
   require 'byebug'

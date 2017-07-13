@@ -156,6 +156,14 @@ Content-Type: application/octet-stream\r\n\
         end
       end
 
+      def publish node, key = nil
+        params = "arg=#{CGI.escape(node.hash)}"
+        params << "&key=#{CGI.escape(key)}" if key
+        @connection.instance_exec(self) do
+          JSON.parse(post("name/publish?#{params}").body)['Name']
+        end
+      end
+
     end
 
   end

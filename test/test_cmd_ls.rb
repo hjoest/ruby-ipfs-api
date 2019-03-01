@@ -20,13 +20,13 @@ class CommandLsTest < Minitest::Test
               {
                 'Name' => 'foo.txt',
                 'Hash' => 'QmTz3oc4gdpRMKP2sdGUPZTAGRngqjsi99BPoztyP53JMM',
-                'Size' => 12,
+                'Size' => 4,
                 'Type' => 2
               },
               {
                 'Name' => 'hello.txt',
                 'Hash' => 'QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG',
-                'Size' => 21,
+                'Size' => 13,
                 'Type' => 2
               }
             ]

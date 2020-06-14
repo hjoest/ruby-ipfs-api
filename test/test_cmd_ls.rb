@@ -12,6 +12,7 @@ class CommandLsTest < Minitest::Test
     Samples.some_virtual_folders do |fixture, expectation|
       ipfs.add fixture
       actual = ipfs.ls('QmcsmfcY8SQzNxJQYGZMHLXCkeTgxDBhASDPJyVEGi8Wrv')
+      actual = streamline_result(actual)
       expectation = {
         'Objects' => [
           {
@@ -35,6 +36,21 @@ class CommandLsTest < Minitest::Test
       }
       assert_equal expectation, actual
     end
+  end
+
+  # At some point, around version 0.4.2, a new property "Target" was introduced
+  # to the "Links" objects. In order to match the test expectation, and still not
+  # fail for older versions, we just remove these here whenever they're empty.
+  private
+  def streamline_result result
+    result['Objects'].each do |object|
+      object['Links'].each do |link|
+        if link['Target'] == ''
+          link.delete('Target')
+        end
+      end
+    end
+    result
   end
 
 end

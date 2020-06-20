@@ -40,7 +40,6 @@ spec = Gem::Specification.new do |s|
   s.authors = AUTHORS
   s.email = EMAIL
   s.homepage = HOMEPAGE
-  s.rubyforge_project = PKG_NAME
   s.summary = SUMMARY
   s.description = DESCRIPTION
   s.platform = Gem::Platform::RUBY
@@ -49,7 +48,6 @@ spec = Gem::Specification.new do |s|
   s.executables = []
   s.files = PKG_FILES
   s.test_files = []
-  s.has_rdoc = true
   s.extra_rdoc_files = RDOC_FILES
   s.rdoc_options = RDOC_OPTIONS
   s.required_ruby_version = ">= 2.0.0"

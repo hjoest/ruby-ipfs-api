@@ -17,7 +17,7 @@ To install this gem, run
 
 or simply add this line to your ``Gemfile``
 
-    gem 'ipfs-api', '~> 0.3.0'
+    gem 'ipfs-api', '~> 0.4.0'
 
 ## Basic examples
 

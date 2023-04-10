@@ -62,6 +62,23 @@ on the local file system:
       print "#{node.name}: #{node.hash}\n" if node.finished?
     end
 
+
+Given a key generated like this: `ipfs key gen --type=rsa --size=2048 your-key` Add a directory to IPFS and then publish over IPNS.
+
+    require 'ipfs-api'
+    
+    ipfs = IPFS::Connection.new
+    key = "your-key"
+      ipfs.add Dir.new("directory-path") do |node|
+        unless node.parent
+          puts "publishing #{node.name} to ipns under the key #{key}"
+          ipns_hash = ipfs.name.publish(node, key)
+          puts "published to ipns hash #{ipns_hash}"
+        end
+      end
+    end
+
+
 ## License
 
 This library is distributed under the [MIT License](https://github.com/hjoest/ruby-ipfs-api/tree/master/LICENSE).
